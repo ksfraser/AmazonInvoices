@@ -6,6 +6,9 @@ namespace AmazonInvoices\Repositories;
 
 use AmazonInvoices\Interfaces\DatabaseRepositoryInterface;
 
+// Include mock functions if not in FrontAccounting environment
+require_once __DIR__ . '/../Support/FrontAccountingMock.php';
+
 /**
  * FrontAccounting Database Repository Implementation
  * 

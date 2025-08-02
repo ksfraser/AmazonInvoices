@@ -632,4 +632,79 @@ class Invoice
 
         return $invoice;
     }
+
+    /**
+     * Calculate total amount including items, tax, and shipping
+     * 
+     * @return float Calculated total
+     */
+    public function calculateTotal(): float
+    {
+        $itemsTotal = 0.0;
+        foreach ($this->items as $item) {
+            $itemsTotal += $item->getTotalPrice();
+        }
+        
+        return $itemsTotal + $this->taxAmount + $this->shippingAmount;
+    }
+
+    /**
+     * Get number of items in invoice
+     * 
+     * @return int Item count
+     */
+    public function getItemCount(): int
+    {
+        return count($this->items);
+    }
+
+    /**
+     * Get total payment amount
+     * 
+     * @return float Total payments
+     */
+    public function getPaymentTotal(): float
+    {
+        $total = 0.0;
+        foreach ($this->payments as $payment) {
+            $total += $payment->getAmount();
+        }
+        
+        return $total;
+    }
+
+    /**
+     * Check if invoice is fully paid
+     * 
+     * @return bool True if payment total equals or exceeds invoice total
+     */
+    public function isFullyPaid(): bool
+    {
+        return $this->getPaymentTotal() >= $this->totalAmount;
+    }
+
+    /**
+     * Magic clone method to deep clone items and payments
+     * 
+     * @return void
+     */
+    public function __clone()
+    {
+        // Deep clone items array
+        $clonedItems = [];
+        foreach ($this->items as $item) {
+            $clonedItems[] = clone $item;
+        }
+        $this->items = $clonedItems;
+
+        // Deep clone payments array
+        $clonedPayments = [];
+        foreach ($this->payments as $payment) {
+            $clonedPayments[] = clone $payment;
+        }
+        $this->payments = $clonedPayments;
+
+        // Reset ID for cloned object
+        $this->id = null;
+    }
 }

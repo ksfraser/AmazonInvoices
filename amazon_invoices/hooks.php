@@ -4,6 +4,19 @@
  * Hooks configuration file
  */
 
+// Include our modern architecture
+require_once(__DIR__ . '/../src/Support/FrontAccountingMock.php');
+
+// Autoloader for our classes
+spl_autoload_register(function ($class) {
+    if (strpos($class, 'AmazonInvoices\\') === 0) {
+        $path = __DIR__ . '/../src/' . str_replace(['AmazonInvoices\\', '\\'], ['', '/'], $class) . '.php';
+        if (file_exists($path)) {
+            require_once $path;
+        }
+    }
+});
+
 $hooks = array(
     array(
         'name' => _('Amazon Invoices'),
@@ -43,5 +56,43 @@ class hooks_amazon_invoices extends hooks
             'SA_AMAZON_PAYMENTS' => array(_('Amazon Payment Allocation'), 5),
         );
         return $security_areas;
+    }
+
+    /**
+     * Install database tables using our new architecture
+     * 
+     * @return bool True on success
+     */
+    function install_tables()
+    {
+        try {
+            // Use our new service-based architecture
+            $database = new \AmazonInvoices\Repositories\FrontAccountingDatabaseRepository();
+            $installer = new \AmazonInvoices\Services\DatabaseInstallationService($database);
+            
+            return $installer->install();
+            
+        } catch (\Exception $e) {
+            display_error("Failed to install Amazon Invoice tables: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Check if module is properly installed
+     * 
+     * @return bool True if installed
+     */
+    function is_installed()
+    {
+        try {
+            $database = new \AmazonInvoices\Repositories\FrontAccountingDatabaseRepository();
+            $installer = new \AmazonInvoices\Services\DatabaseInstallationService($database);
+            
+            return $installer->isInstalled();
+            
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
