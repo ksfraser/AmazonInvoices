@@ -12,7 +12,12 @@
     "require": {
         "php": ">=8.0",
         "ext-json": "*",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+        "ext-curl": "*",
+        "ext-openssl": "*",
+        "ext-hash": "*",
+        "gmail-invoice-processor/gmail-invoice-processor": "^1.0",
+        "pdf-ocr-processor/pdf-ocr-processor": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6",
@@ -24,6 +29,16 @@
             "AmazonInvoices\\": "src/"
         }
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./packages/gmail-invoice-processor"
+        },
+        {
+            "type": "path",
+            "url": "./packages/pdf-ocr-processor"
+        }
+    ],
     "autoload-dev": {
         "psr-4": {
             "AmazonInvoices\\Tests\\": "tests/"
