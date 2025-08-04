@@ -59,9 +59,20 @@ class DatabaseInstallationService
             $this->createCredentialsTable();
             $this->createCredentialTestsTable();
             $this->createApiUsageTable();
+            
+            // Email and PDF import tables
+            $this->createEmailLogsTable();
+            $this->createPdfLogsTable();
+            $this->createGmailCredentialsTable();
+            $this->createEmailSearchPatternsTable();
+            $this->createPdfOcrConfigTable();
+            $this->createImportProcessingQueueTable();
+            $this->createImportStatisticsTable();
 
             $this->insertDefaultSettings();
             $this->insertDefaultMatchingRules();
+            $this->insertDefaultEmailPatterns();
+            $this->insertDefaultOcrConfig();
 
             $this->database->commit();
             return true;
@@ -501,6 +512,282 @@ class DatabaseInstallationService
             INDEX idx_status (response_status)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
 
+        $this->database->query($query);
+    }
+
+    /**
+     * Create email processing logs table
+     */
+    private function createEmailLogsTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}amazon_email_logs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            gmail_message_id VARCHAR(255) NOT NULL,
+            email_subject VARCHAR(500),
+            email_from VARCHAR(255),
+            email_date DATETIME,
+            processed_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            processing_status ENUM('pending', 'processing', 'completed', 'error', 'duplicate') DEFAULT 'pending',
+            error_message TEXT,
+            invoice_id INT,
+            raw_email_data LONGTEXT,
+            extracted_data JSON,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_gmail_message_id (gmail_message_id),
+            INDEX idx_processing_status (processing_status),
+            INDEX idx_processed_date (processed_date),
+            FOREIGN KEY (invoice_id) REFERENCES {$this->prefix}amazon_invoices_staging(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create PDF processing logs table
+     */
+    private function createPdfLogsTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}amazon_pdf_logs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            pdf_file_path VARCHAR(1000) NOT NULL,
+            pdf_file_hash VARCHAR(64) NOT NULL,
+            pdf_file_size BIGINT,
+            processed_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            processing_status ENUM('pending', 'processing', 'completed', 'error', 'duplicate') DEFAULT 'pending',
+            ocr_processing_time DECIMAL(10,3),
+            error_message TEXT,
+            invoice_id INT,
+            extracted_text LONGTEXT,
+            extracted_data JSON,
+            processing_metadata JSON,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_pdf_file_hash (pdf_file_hash),
+            INDEX idx_processing_status (processing_status),
+            INDEX idx_processed_date (processed_date),
+            FOREIGN KEY (invoice_id) REFERENCES {$this->prefix}amazon_invoices_staging(id) ON DELETE SET NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create Gmail credentials table
+     */
+    private function createGmailCredentialsTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}gmail_credentials (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            credential_name VARCHAR(100) NOT NULL,
+            client_id VARCHAR(255) NOT NULL,
+            client_secret VARCHAR(500) NOT NULL,
+            access_token TEXT,
+            refresh_token TEXT,
+            token_expires_at DATETIME,
+            scope VARCHAR(500) DEFAULT 'https://www.googleapis.com/auth/gmail.readonly',
+            is_active BOOLEAN DEFAULT true,
+            last_used TIMESTAMP NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_credential_name (credential_name),
+            INDEX idx_is_active (is_active)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create email search patterns table
+     */
+    private function createEmailSearchPatternsTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}email_search_patterns (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            pattern_name VARCHAR(100) NOT NULL,
+            pattern_type ENUM('subject', 'from', 'body', 'label') DEFAULT 'subject',
+            pattern_value VARCHAR(500) NOT NULL,
+            pattern_regex BOOLEAN DEFAULT false,
+            is_active BOOLEAN DEFAULT true,
+            priority INT DEFAULT 1,
+            description TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_pattern_type (pattern_type),
+            INDEX idx_is_active (is_active),
+            INDEX idx_priority (priority)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create PDF OCR configuration table
+     */
+    private function createPdfOcrConfigTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}pdf_ocr_config (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            config_name VARCHAR(100) NOT NULL,
+            tesseract_path VARCHAR(255) DEFAULT '/usr/bin/tesseract',
+            tesseract_data_path VARCHAR(255) DEFAULT '/usr/share/tesseract-ocr/4.00/tessdata',
+            tesseract_language VARCHAR(10) DEFAULT 'eng',
+            poppler_path VARCHAR(255) DEFAULT '/usr/bin',
+            imagemagick_path VARCHAR(255) DEFAULT '/usr/bin',
+            temp_directory VARCHAR(255) DEFAULT '/tmp/amazon_invoices_ocr',
+            pdf_dpi INT DEFAULT 300,
+            image_preprocessing BOOLEAN DEFAULT true,
+            image_enhancement_level ENUM('none', 'basic', 'advanced') DEFAULT 'basic',
+            ocr_engine_mode INT DEFAULT 3,
+            page_segmentation_mode INT DEFAULT 6,
+            confidence_threshold DECIMAL(5,2) DEFAULT 60.00,
+            is_active BOOLEAN DEFAULT true,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_config_name (config_name),
+            INDEX idx_is_active (is_active)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create import processing queue table
+     */
+    private function createImportProcessingQueueTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}import_processing_queue (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            queue_type ENUM('email', 'pdf') NOT NULL,
+            source_id VARCHAR(255) NOT NULL,
+            priority INT DEFAULT 1,
+            processing_status ENUM('pending', 'processing', 'completed', 'error', 'cancelled') DEFAULT 'pending',
+            attempts INT DEFAULT 0,
+            max_attempts INT DEFAULT 3,
+            last_attempt_at TIMESTAMP NULL,
+            scheduled_for TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            error_message TEXT,
+            processing_data JSON,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_queue_type (queue_type),
+            INDEX idx_processing_status (processing_status),
+            INDEX idx_scheduled_for (scheduled_for),
+            INDEX idx_priority (priority)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create import statistics table
+     */
+    private function createImportStatisticsTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}import_statistics (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            stat_date DATE NOT NULL,
+            import_type ENUM('email', 'pdf') NOT NULL,
+            emails_processed INT DEFAULT 0,
+            emails_successful INT DEFAULT 0,
+            emails_failed INT DEFAULT 0,
+            emails_duplicates INT DEFAULT 0,
+            pdfs_processed INT DEFAULT 0,
+            pdfs_successful INT DEFAULT 0,
+            pdfs_failed INT DEFAULT 0,
+            pdfs_duplicates INT DEFAULT 0,
+            total_invoices_created INT DEFAULT 0,
+            total_items_processed INT DEFAULT 0,
+            average_processing_time DECIMAL(10,3) DEFAULT 0.000,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY unique_stat_date_type (stat_date, import_type),
+            INDEX idx_stat_date (stat_date),
+            INDEX idx_import_type (import_type)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Insert default email search patterns
+     */
+    private function insertDefaultEmailPatterns(): void
+    {
+        $patterns = [
+            [
+                'pattern_name' => 'Amazon Order Confirmation',
+                'pattern_type' => 'subject',
+                'pattern_value' => 'Your order has been shipped',
+                'description' => 'Standard Amazon shipping confirmation'
+            ],
+            [
+                'pattern_name' => 'Amazon Invoice',
+                'pattern_type' => 'subject',
+                'pattern_value' => 'Your Amazon order',
+                'description' => 'General Amazon order subject'
+            ],
+            [
+                'pattern_name' => 'Amazon Receipt',
+                'pattern_type' => 'subject',
+                'pattern_value' => 'Your receipt from Amazon',
+                'description' => 'Amazon receipt emails'
+            ],
+            [
+                'pattern_name' => 'Amazon From Address',
+                'pattern_type' => 'from',
+                'pattern_value' => 'auto-confirm@amazon.com',
+                'description' => 'Primary Amazon confirmation email address'
+            ]
+        ];
+
+        foreach ($patterns as $pattern) {
+            $query = "INSERT INTO {$this->prefix}email_search_patterns 
+                     (pattern_name, pattern_type, pattern_value, description) 
+                     VALUES ('{$pattern['pattern_name']}', '{$pattern['pattern_type']}', 
+                            '{$pattern['pattern_value']}', '{$pattern['description']}')";
+            $this->database->query($query);
+        }
+    }
+
+    /**
+     * Insert default PDF OCR configuration
+     */
+    private function insertDefaultOcrConfig(): void
+    {
+        $config = [
+            'config_name' => 'Default OCR Config',
+            'tesseract_path' => '/usr/bin/tesseract',
+            'tesseract_data_path' => '/usr/share/tesseract-ocr/4.00/tessdata',
+            'tesseract_language' => 'eng',
+            'poppler_path' => '/usr/bin',
+            'imagemagick_path' => '/usr/bin',
+            'temp_directory' => '/tmp/amazon_invoices_ocr',
+            'pdf_dpi' => 300,
+            'image_preprocessing' => true,
+            'image_enhancement_level' => 'basic',
+            'ocr_engine_mode' => 3,
+            'page_segmentation_mode' => 6,
+            'confidence_threshold' => 60.00,
+            'is_active' => true
+        ];
+
+        $imagePreprocessing = $config['image_preprocessing'] ? 1 : 0;
+        $isActive = $config['is_active'] ? 1 : 0;
+        
+        $query = "INSERT INTO {$this->prefix}pdf_ocr_config 
+                 (config_name, tesseract_path, tesseract_data_path, tesseract_language, 
+                  poppler_path, imagemagick_path, temp_directory, pdf_dpi, 
+                  image_preprocessing, image_enhancement_level, ocr_engine_mode, 
+                  page_segmentation_mode, confidence_threshold, is_active) 
+                 VALUES ('{$config['config_name']}', '{$config['tesseract_path']}', 
+                        '{$config['tesseract_data_path']}', '{$config['tesseract_language']}',
+                        '{$config['poppler_path']}', '{$config['imagemagick_path']}',
+                        '{$config['temp_directory']}', {$config['pdf_dpi']},
+                        $imagePreprocessing, '{$config['image_enhancement_level']}',
+                        {$config['ocr_engine_mode']}, {$config['page_segmentation_mode']},
+                        {$config['confidence_threshold']}, $isActive)";
+        
         $this->database->query($query);
     }
 }

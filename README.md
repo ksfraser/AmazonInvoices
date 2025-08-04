@@ -1,11 +1,17 @@
-# Amazon Invoices Module for FrontAccounting
+# Amazon Invoice Import System
 
-A comprehensive FrontAccounting module for downloading, processing, and integrating Amazon invoices into your accounting system.
+A comprehensive PHP system for importing Amazon purchase invoices into FrontAccounting (FA) with support for multiple import methods, manual item matching, payment allocation, and review workflows. The system follows SOLID principles and uses dependency injection for maximum flexibility.
 
 ## Features
 
+### Multiple Import Methods
+- **SP-API Integration**: Official Amazon Selling Partner API for business accounts
+- **Gmail Email Processing**: Process Amazon order confirmation emails via Gmail API
+- **PDF OCR Processing**: Extract data from Amazon PDF invoices using Tesseract OCR
+- **Smart Data Extraction**: Intelligent parsing of invoice data from multiple sources
+
 ### Core Functionality
-- **Automated Invoice Download**: Download invoices from Amazon for specified date ranges
+- **Automated Invoice Processing**: Download and process invoices from multiple sources
 - **Staging System**: Review and validate invoices before processing them into FrontAccounting
 - **Item Matching**: Smart matching of Amazon products to existing FrontAccounting stock items
 - **Payment Allocation**: Flexible payment allocation including split payments across multiple accounts
@@ -24,11 +30,54 @@ A comprehensive FrontAccounting module for downloading, processing, and integrat
 - **Bank Account Allocation**: Map payment methods to specific FrontAccounting bank accounts
 - **Payment Type Integration**: Full integration with FrontAccounting payment terms
 
-### Data Management
-- **Staging Tables**: Safe processing with dedicated staging tables
-- **Data Validation**: Comprehensive validation before processing
+### Architecture & Security
+- **SOLID Architecture**: Clean, maintainable code with dependency injection
+- **Framework Agnostic**: Works with FrontAccounting, WordPress, or any PHP framework
+- **Security**: Encrypted credential storage with AES-256-CBC encryption
+- **Testing**: Comprehensive PHPUnit test coverage
 - **Error Handling**: Robust error handling with detailed logging
-- **Data Backup**: Optional backup of processed files
+
+## Import Method Details
+
+### 1. SP-API Integration
+The official Amazon Selling Partner API provides real-time access to order data:
+- **Requirements**: Amazon Developer account, app approval, business/seller account
+- **Data Access**: Real-time order information, invoice details, item data
+- **Best For**: Businesses with Amazon seller accounts
+- **Configuration**: Amazon SP-API credentials, refresh tokens, marketplace settings
+
+### 2. Gmail Email Processing
+Process Amazon order confirmation emails automatically:
+- **Requirements**: Gmail account, Google Cloud Console project, OAuth2 setup
+- **Data Access**: Email parsing for order details, invoice attachments
+- **Best For**: Personal Amazon purchases, automated email processing
+- **Features**: Configurable search patterns, duplicate detection, batch processing
+
+### 3. PDF OCR Processing
+Extract data from Amazon PDF invoices using optical character recognition:
+- **Requirements**: Linux server, Tesseract OCR, Poppler utilities, ImageMagick
+- **Data Access**: Text extraction from PDF invoices, image preprocessing
+- **Best For**: Scanned invoices, PDF downloads, legacy data processing
+- **Features**: Multiple language support, confidence thresholds, image enhancement
+
+## System Requirements
+
+### Base Requirements
+- **PHP**: 8.0 or higher with strict types enabled
+- **Extensions**: PDO, JSON, OpenSSL, cURL, GD/ImageMagick
+- **Database**: MySQL 5.7+ or MariaDB 10.2+
+- **FrontAccounting**: 2.4+ (if using FA integration)
+
+### Gmail Processing Requirements
+- **Google API Client**: `composer require google/apiclient`
+- **OAuth2 Setup**: Google Cloud Console project with Gmail API enabled
+- **Credentials**: OAuth2 client ID and secret
+
+### PDF OCR Requirements (Linux)
+- **Tesseract OCR**: `sudo apt-get install tesseract-ocr tesseract-ocr-eng`
+- **Poppler Utils**: `sudo apt-get install poppler-utils`
+- **ImageMagick**: `sudo apt-get install imagemagick`
+- **Additional Languages**: `sudo apt-get install tesseract-ocr-[lang]`
 
 ## Installation
 
@@ -38,16 +87,99 @@ Copy the `amazon_invoices` folder to your FrontAccounting `modules` directory:
 /path/to/frontaccounting/modules/amazon_invoices/
 ```
 
-### 2. Enable Module
+### 2. Install Dependencies
+```bash
+composer install
+```
+
+### 3. Enable Module
 1. Go to **Setup > Extensions**
 2. Find "Amazon Invoices" in the list
 3. Click **Install/Activate**
 4. Configure the module settings during installation
 
-### 3. Configure Settings
-1. Go to **Amazon > Settings**
-2. Configure:
-   - Amazon account credentials
+### 4. Database Setup
+The installation will automatically create the required database tables:
+- Amazon invoice staging tables
+- Item matching rules and history
+- Credential storage (encrypted)
+- Email processing logs
+- PDF processing logs
+- Import statistics
+
+### 5. Configure Import Methods
+
+#### SP-API Setup
+1. Go to **Amazon > Amazon Credentials**
+2. Select "SP-API" as authentication method
+3. Enter your SP-API credentials:
+   - Client ID
+   - Client Secret
+   - Refresh Token
+   - AWS Region
+   - Marketplace ID
+
+#### Gmail Setup
+1. Create Google Cloud Console project
+2. Enable Gmail API
+3. Create OAuth2 credentials
+4. Go to **Amazon > Gmail Credentials**
+5. Enter OAuth2 client ID and secret
+6. Authorize access to Gmail account
+
+#### PDF OCR Setup
+1. Install required system packages (Linux)
+2. Go to **Amazon > PDF OCR Config**
+3. Configure paths and settings:
+   - Tesseract executable path
+   - Language data path
+   - Processing parameters
+   - Temporary directory
+
+## Usage
+
+### Email Import Workflow
+1. **Configure Patterns**: Set up email search patterns to identify Amazon emails
+2. **Run Email Import**: Process matching emails from Gmail account
+3. **Review Results**: Check imported invoices in staging area
+4. **Match Items**: Review and approve item matching suggestions
+5. **Allocate Payments**: Configure payment method allocations
+6. **Process to FA**: Move approved invoices to FrontAccounting
+
+### PDF Import Workflow
+1. **Upload PDFs**: Place PDF files in designated import directory
+2. **Run OCR Processing**: Extract text and data from PDFs
+3. **Review Extraction**: Verify OCR accuracy and data extraction
+4. **Follow Standard Flow**: Item matching, payment allocation, FA processing
+
+### SP-API Import Workflow
+1. **Configure Date Range**: Set import date parameters
+2. **Download Orders**: Retrieve order data from Amazon API
+3. **Process Invoices**: Convert order data to invoice format
+4. **Follow Standard Flow**: Review, match, allocate, process
+
+## Configuration
+
+### Email Search Patterns
+Configure patterns to identify Amazon invoice emails:
+- **Subject Patterns**: "Your order has been shipped", "Your Amazon order"
+- **From Patterns**: "auto-confirm@amazon.com", "ship-confirm@amazon.com"
+- **Regular Expressions**: Support for complex pattern matching
+- **Priority System**: Order patterns by matching priority
+
+### Item Matching Rules
+Create rules for automatic item matching:
+- **ASIN Matching**: Direct Amazon ASIN to stock code mapping
+- **SKU Matching**: Amazon SKU to FrontAccounting stock code
+- **Keyword Matching**: Pattern-based matching using product names
+- **Category Rules**: Match by product category or department
+
+### Payment Method Mapping
+Map Amazon payment methods to FA accounts:
+- **Credit Cards**: Map to specific credit card accounts
+- **Bank Transfers**: Connect to bank accounts
+- **Digital Payments**: PayPal, Amazon Pay, etc.
+- **Gift Cards/Points**: Special handling for non-cash payments
    - Download path for invoice files
    - Default Amazon supplier
    - Notification settings
