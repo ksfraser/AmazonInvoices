@@ -41,6 +41,11 @@ $installed_modules[] = array(
                 'access' => 'SA_AMAZON_INVOICES'
             ),
             array(
+                'url' => 'amazon_invoices/amazon_credentials.php',
+                'text' => _('API Credentials'),
+                'access' => 'SA_AMAZON_INVOICES'
+            ),
+            array(
                 'url' => 'amazon_invoices/settings.php',
                 'text' => _('Settings'),
                 'access' => 'SA_AMAZON_INVOICES'

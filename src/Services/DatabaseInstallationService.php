@@ -56,6 +56,9 @@ class DatabaseInstallationService
             $this->createMatchingRulesTable();
             $this->createMatchingHistoryTable();
             $this->createSettingsTable();
+            $this->createCredentialsTable();
+            $this->createCredentialTestsTable();
+            $this->createApiUsageTable();
 
             $this->insertDefaultSettings();
             $this->insertDefaultMatchingRules();
@@ -82,6 +85,9 @@ class DatabaseInstallationService
 
             // Drop tables in reverse order of dependencies
             $tables = [
+                'amazon_api_usage',
+                'amazon_credential_tests',
+                'amazon_credentials',
                 'amazon_item_matching_history',
                 'amazon_item_matching_rules',
                 'amazon_payment_staging',
@@ -432,5 +438,69 @@ class DatabaseInstallationService
                 $rule['notes']
             ]);
         }
+    }
+
+    /**
+     * Create Amazon credentials table
+     */
+    private function createCredentialsTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}amazon_credentials (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            company_id INT NOT NULL DEFAULT 1,
+            auth_method ENUM('sp_api', 'oauth', 'scraping') NOT NULL,
+            credentials_data TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_company (company_id),
+            INDEX idx_method (auth_method)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create credential tests table
+     */
+    private function createCredentialTestsTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}amazon_credential_tests (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            company_id INT NOT NULL DEFAULT 1,
+            test_success BOOLEAN NOT NULL,
+            test_error TEXT,
+            test_details TEXT,
+            test_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_company (company_id),
+            INDEX idx_date (test_date),
+            UNIQUE KEY unique_company (company_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
+    }
+
+    /**
+     * Create API usage tracking table
+     */
+    private function createApiUsageTable(): void
+    {
+        $query = "CREATE TABLE IF NOT EXISTS {$this->prefix}amazon_api_usage (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            company_id INT NOT NULL DEFAULT 1,
+            api_endpoint VARCHAR(255) NOT NULL,
+            request_method VARCHAR(10) NOT NULL,
+            response_status INT,
+            request_size INT DEFAULT 0,
+            response_size INT DEFAULT 0,
+            execution_time_ms INT DEFAULT 0,
+            error_message TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_company (company_id),
+            INDEX idx_date (created_at),
+            INDEX idx_endpoint (api_endpoint),
+            INDEX idx_status (response_status)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+        $this->database->query($query);
     }
 }

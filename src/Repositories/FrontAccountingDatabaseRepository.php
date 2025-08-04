@@ -177,4 +177,53 @@ class FrontAccountingDatabaseRepository implements DatabaseRepositoryInterface
             }
         }, $query);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function numRows($result): int
+    {
+        return db_num_rows($result);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTableColumns(string $tableName): array
+    {
+        $fullTableName = $this->getTablePrefix() . $tableName;
+        $result = $this->query("DESCRIBE {$fullTableName}");
+        
+        $columns = [];
+        while ($row = $this->fetch($result)) {
+            $columns[] = [
+                'name' => $row['Field'],
+                'type' => $row['Type'],
+                'null' => $row['Null'] === 'YES',
+                'key' => $row['Key'],
+                'default' => $row['Default'],
+                'extra' => $row['Extra']
+            ];
+        }
+        
+        return $columns;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rawQuery(string $sql)
+    {
+        return db_query($sql);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConnection()
+    {
+        // In FrontAccounting, the connection is managed globally
+        // Return a reference to indicate connection exists
+        return $GLOBALS['db'] ?? null;
+    }
 }
