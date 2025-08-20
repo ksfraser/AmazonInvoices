@@ -364,7 +364,7 @@ class InvoiceItem
      */
     public function setMatchType(?string $matchType): void
     {
-        $validTypes = ['auto', 'manual', 'new'];
+        $validTypes = ['auto', 'manual', 'new', 'asin'];
         if ($matchType !== null && !in_array($matchType, $validTypes, true)) {
             throw new \InvalidArgumentException("Invalid match type: {$matchType}");
         }

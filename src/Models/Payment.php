@@ -111,7 +111,7 @@ class Payment
      */
     public function setPaymentMethod(string $paymentMethod): void
     {
-        $validMethods = ['credit_card', 'bank_transfer', 'paypal', 'gift_card', 'points', 'split'];
+        $validMethods = ['credit_card', 'bank_transfer', 'paypal', 'gift_card', 'amazon_credit', 'points', 'split'];
         if (!in_array($paymentMethod, $validMethods, true)) {
             throw new \InvalidArgumentException("Invalid payment method: {$paymentMethod}");
         }

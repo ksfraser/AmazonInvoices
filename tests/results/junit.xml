@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="C:\Users\prote\AmazonInvoices\tests\Unit\Models" tests="23" assertions="84" errors="6" warnings="0" failures="6" skipped="0" time="0.030937">
+    <testsuite name="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" tests="11" assertions="45" errors="4" warnings="0" failures="3" skipped="0" time="0.017482">
+      <testcase name="testItemCreation" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="32" assertions="6" time="0.009180"/>
+      <testcase name="testItemValidation" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="42" assertions="1" time="0.002311">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">AmazonInvoices\Tests\Unit\Models\InvoiceItemTest::testItemValidation
+Failed asserting that Array &amp;0 () is true.
+
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php:44</failure>
+      </testcase>
+      <testcase name="testSettersAndGetters" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="63" assertions="5" time="0.000638">
+        <error type="InvalidArgumentException">AmazonInvoices\Tests\Unit\Models\InvoiceItemTest::testSettersAndGetters
+InvalidArgumentException: Invalid match type: asin
+
+C:\Users\prote\AmazonInvoices\src\Models\InvoiceItem.php:369
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php:80</error>
+      </testcase>
+      <testcase name="testMatchToStock" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="90" assertions="1" time="0.000225">
+        <error type="InvalidArgumentException">AmazonInvoices\Tests\Unit\Models\InvoiceItemTest::testMatchToStock
+InvalidArgumentException: Invalid match type: asin
+
+C:\Users\prote\AmazonInvoices\src\Models\InvoiceItem.php:369
+C:\Users\prote\AmazonInvoices\src\Models\InvoiceItem.php:448
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php:94</error>
+      </testcase>
+      <testcase name="testArrayConversion" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="102" assertions="9" time="0.001830">
+        <error type="PHPUnit\Framework\Error\Warning">AmazonInvoices\Tests\Unit\Models\InvoiceItemTest::testArrayConversion
+Undefined array key "fa_item_matched"
+
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php:119</error>
+      </testcase>
+      <testcase name="testFromArray" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="122" assertions="10" time="0.000182">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">AmazonInvoices\Tests\Unit\Models\InvoiceItemTest::testFromArray
+Failed asserting that false is true.
+
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php:151</failure>
+      </testcase>
+      <testcase name="testPriceCalculation" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="157" assertions="3" time="0.000199"/>
+      <testcase name="testCalculateTotalWithTax" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="169" assertions="1" time="0.000097"/>
+      <testcase name="testClone" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="177" assertions="5" time="0.001733">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">AmazonInvoices\Tests\Unit\Models\InvoiceItemTest::testClone
+Failed asserting that 123 is null.
+
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php:194</failure>
+      </testcase>
+      <testcase name="testGetDisplayName" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="197" assertions="2" time="0.000932"/>
+      <testcase name="testMatchMethodBehavior" class="AmazonInvoices\Tests\Unit\Models\InvoiceItemTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceItemTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php" line="209" assertions="2" time="0.000154">
+        <error type="InvalidArgumentException">AmazonInvoices\Tests\Unit\Models\InvoiceItemTest::testMatchMethodBehavior
+InvalidArgumentException: Invalid match type: asin
+
+C:\Users\prote\AmazonInvoices\src\Models\InvoiceItem.php:369
+C:\Users\prote\AmazonInvoices\src\Models\InvoiceItem.php:448
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceItemTest.php:217</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="AmazonInvoices\Tests\Unit\Models\InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" tests="12" assertions="39" errors="2" warnings="0" failures="3" skipped="0" time="0.013455">
+      <testcase name="testInvoiceCreation" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="34" assertions="6" time="0.002310"/>
+      <testcase name="testInvoiceValidation" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="44" assertions="1" time="0.000341">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">AmazonInvoices\Tests\Unit\Models\InvoiceTest::testInvoiceValidation
+Failed asserting that Array &amp;0 () is true.
+
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php:46</failure>
+      </testcase>
+      <testcase name="testAddItem" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="57" assertions="2" time="0.000626"/>
+      <testcase name="testAddPayment" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="67" assertions="3" time="0.005528"/>
+      <testcase name="testStatusTransitions" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="78" assertions="1" time="0.000260">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">AmazonInvoices\Tests\Unit\Models\InvoiceTest::testStatusTransitions
+Failed asserting that null is true.
+
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php:81</failure>
+      </testcase>
+      <testcase name="testArrayConversion" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="92" assertions="7" time="0.000175"/>
+      <testcase name="testFromArray" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="108" assertions="9" time="0.000114"/>
+      <testcase name="testCalculateTotal" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="135" assertions="1" time="0.003414">
+        <failure type="PHPUnit\Framework\ExpectationFailedException">AmazonInvoices\Tests\Unit\Models\InvoiceTest::testCalculateTotal
+Failed asserting that 75.46999999999998 matches expected 75.47.
+
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php:146</failure>
+      </testcase>
+      <testcase name="testGetItemCount" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="149" assertions="3" time="0.000176"/>
+      <testcase name="testGetPaymentTotal" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="163" assertions="0" time="0.000175">
+        <error type="InvalidArgumentException">AmazonInvoices\Tests\Unit\Models\InvoiceTest::testGetPaymentTotal
+InvalidArgumentException: Invalid payment method: amazon_credit
+
+C:\Users\prote\AmazonInvoices\src\Models\Payment.php:116
+C:\Users\prote\AmazonInvoices\src\Models\Payment.php:70
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php:166</error>
+      </testcase>
+      <testcase name="testIsFullyPaid" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="174" assertions="2" time="0.000198">
+        <error type="InvalidArgumentException">AmazonInvoices\Tests\Unit\Models\InvoiceTest::testIsFullyPaid
+InvalidArgumentException: Invalid payment method: amazon_credit
+
+C:\Users\prote\AmazonInvoices\src\Models\Payment.php:116
+C:\Users\prote\AmazonInvoices\src\Models\Payment.php:70
+C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php:184</error>
+      </testcase>
+      <testcase name="testClone" class="AmazonInvoices\Tests\Unit\Models\InvoiceTest" classname="AmazonInvoices.Tests.Unit.Models.InvoiceTest" file="C:\Users\prote\AmazonInvoices\tests\Unit\Models\InvoiceTest.php" line="189" assertions="4" time="0.000137"/>
+    </testsuite>
+  </testsuite>
+</testsuites>
