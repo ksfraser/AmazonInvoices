@@ -1,0 +1,13 @@
+{
+  "name": "frontaccounting/fa-amazon-invoices",
+  "description": "FrontAccounting wrapper for AmazonInvoices Composer package.",
+  "type": "project",
+  "require": {
+    "ksfraser/amazoninvoices": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "FAAmazonInvoices\\": "src/"
+    }
+  }
+}
