@@ -18,42 +18,66 @@ class Payment
     /**
      * @var int|null Internal ID (populated after saving to database)
      */
-    private ?int $id = null;
+    /**
+     * @var int|null Internal ID (populated after saving to database)
+     */
+    private $id = null;
 
     /**
      * @var string Payment method (credit_card, bank_transfer, paypal, gift_card, points, split)
      */
-    private string $paymentMethod;
+    /**
+     * @var string Payment method (credit_card, bank_transfer, paypal, gift_card, points, split)
+     */
+    private $paymentMethod;
 
     /**
      * @var string|null Payment reference (last 4 digits, confirmation number, etc.)
      */
-    private ?string $paymentReference = null;
+    /**
+     * @var string|null Payment reference (last 4 digits, confirmation number, etc.)
+     */
+    private $paymentReference = null;
 
     /**
      * @var float Payment amount
      */
-    private float $amount;
+    /**
+     * @var float Payment amount
+     */
+    private $amount;
 
     /**
      * @var int|null FrontAccounting bank account ID
      */
-    private ?int $faBankAccount = null;
+    /**
+     * @var int|null FrontAccounting bank account ID
+     */
+    private $faBankAccount = null;
 
     /**
      * @var int|null FrontAccounting payment type ID
      */
-    private ?int $faPaymentType = null;
+    /**
+     * @var int|null FrontAccounting payment type ID
+     */
+    private $faPaymentType = null;
 
     /**
      * @var bool Whether payment allocation is complete
      */
-    private bool $allocationComplete = false;
+    /**
+     * @var bool Whether payment allocation is complete
+     */
+    private $allocationComplete = false;
 
     /**
      * @var string|null Additional notes
      */
-    private ?string $notes = null;
+    /**
+     * @var string|null Additional notes
+     */
+    private $notes = null;
 
     /**
      * Payment constructor

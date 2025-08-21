@@ -24,27 +24,42 @@ class PdfOcrProcessor
     /**
      * @var DatabaseRepositoryInterface Database repository
      */
-    private DatabaseRepositoryInterface $database;
+    /**
+     * @var DatabaseRepositoryInterface
+     */
+    private $database;
 
     /**
      * @var string Path to Tesseract executable
      */
-    private string $tesseractPath;
+    /**
+     * @var string
+     */
+    private $tesseractPath;
 
     /**
      * @var string Path to temporary directory for processing
      */
-    private string $tempPath;
+    /**
+     * @var string
+     */
+    private $tempPath;
 
     /**
      * @var array OCR configuration options
      */
-    private array $ocrConfig;
+    /**
+     * @var array
+     */
+    private $ocrConfig;
 
     /**
      * @var array PDF processing tools paths
      */
-    private array $pdfTools;
+    /**
+     * @var array
+     */
+    private $pdfTools;
 
     /**
      * Constructor

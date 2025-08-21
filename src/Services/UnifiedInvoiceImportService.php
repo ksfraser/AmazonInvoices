@@ -14,10 +14,26 @@ use AmazonInvoices\Interfaces\DatabaseRepositoryInterface;
  */
 class UnifiedInvoiceImportService
 {
-    private DatabaseRepositoryInterface $database;
-    private DuplicateDetectionService $duplicateDetector;
-    private GmailProcessorWrapper $gmailProcessor;
-    private PdfOcrProcessorWrapper $pdfProcessor;
+
+    /**
+     * @var DatabaseRepositoryInterface
+     */
+    private $database;
+
+    /**
+     * @var DuplicateDetectionService
+     */
+    private $duplicateDetector;
+
+    /**
+     * @var GmailProcessorWrapper
+     */
+    private $gmailProcessor;
+
+    /**
+     * @var PdfOcrProcessorWrapper
+     */
+    private $pdfProcessor;
     
     public function __construct(
         DatabaseRepositoryInterface $database,
@@ -34,7 +50,11 @@ class UnifiedInvoiceImportService
     /**
      * Process emails and return results with duplicate checking
      */
-    public function processEmails(array $options = []): array
+    /**
+     * @param array $options
+     * @return array
+     */
+    public function processEmails($options = array())
     {
         try {
             $results = $this->gmailProcessor->processEmails($options);
@@ -65,7 +85,12 @@ class UnifiedInvoiceImportService
     /**
      * Process a single PDF file
      */
-    public function processPdfFile(string $filePath, array $options = []): array
+    /**
+     * @param string $filePath
+     * @param array $options
+     * @return array
+     */
+    public function processPdfFile($filePath, $options = array())
     {
         try {
             $result = $this->pdfProcessor->processPdfFile($filePath, $options);
@@ -94,7 +119,12 @@ class UnifiedInvoiceImportService
     /**
      * Process multiple PDF files from a directory
      */
-    public function processPdfDirectory(string $directoryPath, array $options = []): array
+    /**
+     * @param string $directoryPath
+     * @param array $options
+     * @return array
+     */
+    public function processPdfDirectory($directoryPath, $options = array())
     {
         try {
             $results = $this->pdfProcessor->processDirectory($directoryPath, $options);
@@ -126,7 +156,12 @@ class UnifiedInvoiceImportService
     /**
      * Process uploaded PDF files
      */
-    public function processUploadedFiles(array $uploadedFiles, array $options = []): array
+    /**
+     * @param array $uploadedFiles
+     * @param array $options
+     * @return array
+     */
+    public function processUploadedFiles($uploadedFiles, $options = array())
     {
         try {
             $results = $this->pdfProcessor->processUploadedFiles($uploadedFiles, $options);
@@ -157,7 +192,11 @@ class UnifiedInvoiceImportService
     /**
      * Get processing statistics across all import methods
      */
-    public function getProcessingStatistics(int $daysBack = 30): array
+    /**
+     * @param int $daysBack
+     * @return array
+     */
+    public function getProcessingStatistics($daysBack = 30)
     {
         $sinceDateString = date('Y-m-d', strtotime("-$daysBack days"));
         
@@ -236,7 +275,11 @@ class UnifiedInvoiceImportService
     /**
      * Get recent processing activity across all import methods
      */
-    public function getRecentActivity(int $limit = 50): array
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getRecentActivity($limit = 50)
     {
         $activities = [];
         
@@ -285,7 +328,11 @@ class UnifiedInvoiceImportService
     /**
      * Get pending invoices that need review
      */
-    public function getPendingInvoices(int $limit = 100): array
+    /**
+     * @param int $limit
+     * @return array
+     */
+    public function getPendingInvoices($limit = 100)
     {
         $query = "SELECT 
                       s.*,
@@ -311,7 +358,12 @@ class UnifiedInvoiceImportService
     /**
      * Mark invoice as processed
      */
-    public function markInvoiceAsProcessed(int $invoiceId, string $faInvoiceNumber = null): bool
+    /**
+     * @param int $invoiceId
+     * @param string|null $faInvoiceNumber
+     * @return bool
+     */
+    public function markInvoiceAsProcessed($invoiceId, $faInvoiceNumber = null)
     {
         $updates = ['status = "processed"', 'processed_at = NOW()'];
         
@@ -371,7 +423,11 @@ class UnifiedInvoiceImportService
     /**
      * Clean up old processed records
      */
-    public function cleanupOldRecords(int $daysToKeep = 90): array
+    /**
+     * @param int $daysToKeep
+     * @return array
+     */
+    public function cleanupOldRecords($daysToKeep = 90)
     {
         $cutoffDate = date('Y-m-d', strtotime("-$daysToKeep days"));
         $cleaned = [];
@@ -411,7 +467,12 @@ class UnifiedInvoiceImportService
     // Helper Methods
     // =================
     
-    private function calculateSuccessRate(int $successful, int $total): float
+    /**
+     * @param int $successful
+     * @param int $total
+     * @return float
+     */
+    private function calculateSuccessRate($successful, $total)
     {
         if ($total === 0) {
             return 0.0;

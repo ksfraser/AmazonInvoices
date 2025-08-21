@@ -18,7 +18,10 @@ use AmazonInvoices\Interfaces\DatabaseRepositoryInterface;
  */
 class DuplicateDetectionService
 {
-    private DatabaseRepositoryInterface $database;
+    /**
+     * @var DatabaseRepositoryInterface
+     */
+    private $database;
     
     public function __construct(DatabaseRepositoryInterface $database)
     {

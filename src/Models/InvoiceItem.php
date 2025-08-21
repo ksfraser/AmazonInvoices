@@ -18,67 +18,106 @@ class InvoiceItem
     /**
      * @var int|null Internal ID (populated after saving to database)
      */
-    private ?int $id = null;
+    /**
+     * @var int|null Internal ID (populated after saving to database)
+     */
+    private $id = null;
 
     /**
      * @var int Line number within the invoice
      */
-    private int $lineNumber;
+    /**
+     * @var int Line number within the invoice
+     */
+    private $lineNumber;
 
     /**
      * @var string Product name/description
      */
-    private string $productName;
+    /**
+     * @var string Product name/description
+     */
+    private $productName;
 
     /**
      * @var string|null Amazon Standard Identification Number
      */
-    private ?string $asin = null;
+    /**
+     * @var string|null Amazon Standard Identification Number
+     */
+    private $asin = null;
 
     /**
      * @var string|null Stock Keeping Unit
      */
-    private ?string $sku = null;
+    /**
+     * @var string|null Stock Keeping Unit
+     */
+    private $sku = null;
 
     /**
      * @var int Quantity ordered
      */
-    private int $quantity;
+    /**
+     * @var int Quantity ordered
+     */
+    private $quantity;
 
     /**
      * @var float Price per unit
      */
-    private float $unitPrice;
+    /**
+     * @var float Price per unit
+     */
+    private $unitPrice;
 
     /**
      * @var float Total price for this line item
      */
-    private float $totalPrice;
+    /**
+     * @var float Total price for this line item
+     */
+    private $totalPrice;
 
     /**
      * @var float Tax amount for this item
      */
-    private float $taxAmount = 0.0;
+    /**
+     * @var float Tax amount for this item
+     */
+    private $taxAmount = 0.0;
 
     /**
      * @var string|null Matched FrontAccounting stock ID
      */
-    private ?string $faStockId = null;
+    /**
+     * @var string|null Matched FrontAccounting stock ID
+     */
+    private $faStockId = null;
 
     /**
      * @var bool Whether this item has been matched
      */
-    private bool $isMatched = false;
+    /**
+     * @var bool Whether this item has been matched
+     */
+    private $isMatched = false;
 
     /**
      * @var string|null How the item was matched (auto, manual, new)
      */
-    private ?string $matchType = null;
+    /**
+     * @var string|null How the item was matched (auto, manual, new)
+     */
+    private $matchType = null;
 
     /**
      * @var string|null Supplier item code
      */
-    private ?string $supplierItemCode = null;
+    /**
+     * @var string|null Supplier item code
+     */
+    private $supplierItemCode = null;
 
     /**
      * @var string|null Category suggestion for new items

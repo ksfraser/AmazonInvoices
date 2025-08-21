@@ -19,82 +19,130 @@ class Invoice
     /**
      * @var int|null Internal ID (populated after saving to database)
      */
-    private ?int $id = null;
+    /**
+     * @var int|null Internal ID (populated after saving to database)
+     */
+    private $id = null;
 
     /**
      * @var string Amazon invoice number
      */
-    private string $invoiceNumber;
+    /**
+     * @var string Amazon invoice number
+     */
+    private $invoiceNumber;
 
     /**
      * @var string Amazon order number
      */
-    private string $orderNumber;
+    /**
+     * @var string Amazon order number
+     */
+    private $orderNumber;
 
     /**
      * @var \DateTime Invoice date
      */
-    private \DateTime $invoiceDate;
+    /**
+     * @var \DateTime Invoice date
+     */
+    private $invoiceDate;
 
     /**
      * @var float Total invoice amount
      */
-    private float $totalAmount;
+    /**
+     * @var float Total invoice amount
+     */
+    private $totalAmount;
 
     /**
      * @var float Tax amount
      */
-    private float $taxAmount;
+    /**
+     * @var float Tax amount
+     */
+    private $taxAmount;
 
     /**
      * @var float Shipping amount
      */
-    private float $shippingAmount;
+    /**
+     * @var float Shipping amount
+     */
+    private $shippingAmount;
 
     /**
      * @var string Currency code (ISO 4217)
      */
-    private string $currency;
+    /**
+     * @var string Currency code (ISO 4217)
+     */
+    private $currency;
 
     /**
      * @var string|null Path to downloaded PDF file
      */
-    private ?string $pdfPath = null;
+    /**
+     * @var string|null Path to downloaded PDF file
+     */
+    private $pdfPath = null;
 
     /**
      * @var string|null Raw invoice data (JSON, XML, etc.)
      */
-    private ?string $rawData = null;
+    /**
+     * @var string|null Raw invoice data (JSON, XML, etc.)
+     */
+    private $rawData = null;
 
     /**
      * @var string Processing status
      */
-    private string $status = 'pending';
+    /**
+     * @var string Processing status
+     */
+    private $status = 'pending';
 
     /**
      * @var InvoiceItem[] Array of invoice items
      */
-    private array $items = [];
+    /**
+     * @var InvoiceItem[] Array of invoice items
+     */
+    private $items = array();
 
     /**
      * @var Payment[] Array of payments
      */
-    private array $payments = [];
+    /**
+     * @var Payment[] Array of payments
+     */
+    private $payments = array();
 
     /**
      * @var \DateTime Creation timestamp
      */
-    private \DateTime $createdAt;
+    /**
+     * @var \DateTime Creation timestamp
+     */
+    private $createdAt;
 
     /**
      * @var \DateTime|null Processing timestamp
      */
-    private ?\DateTime $processedAt = null;
+    /**
+     * @var \DateTime|null Processing timestamp
+     */
+    private $processedAt = null;
 
     /**
      * @var int|null FrontAccounting transaction number
      */
-    private ?int $faTransactionNumber = null;
+    /**
+     * @var int|null FrontAccounting transaction number
+     */
+    private $faTransactionNumber = null;
 
     /**
      * @var string|null Processing notes

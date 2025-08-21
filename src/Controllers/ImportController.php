@@ -16,7 +16,10 @@ use AmazonInvoices\Repositories\FrontAccountingDatabaseRepository;
  */
 class ImportController
 {
-    private UnifiedInvoiceImportService $importService;
+    /**
+     * @var UnifiedInvoiceImportService
+     */
+    private $importService;
     
     public function __construct()
     {

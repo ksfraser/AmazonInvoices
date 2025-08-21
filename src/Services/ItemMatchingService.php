@@ -23,27 +23,42 @@ class ItemMatchingService implements ItemMatchingServiceInterface
     /**
      * @var DatabaseRepositoryInterface Database repository
      */
-    private DatabaseRepositoryInterface $database;
+    /**
+     * @var DatabaseRepositoryInterface
+     */
+    private $database;
 
     /**
      * @var array Matching configuration
      */
-    private array $config;
+    /**
+     * @var array
+     */
+    private $config;
 
     /**
      * @var string Stock items table name
      */
-    private string $stockTable;
+    /**
+     * @var string
+     */
+    private $stockTable;
 
     /**
      * @var string Matching rules table name
      */
-    private string $rulesTable;
+    /**
+     * @var string
+     */
+    private $rulesTable;
 
     /**
      * @var string Matching history table name
      */
-    private string $historyTable;
+    /**
+     * @var string
+     */
+    private $historyTable;
 
     /**
      * Constructor

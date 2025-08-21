@@ -215,10 +215,25 @@ if (!defined('TB_PREF')) {
  */
 class MockQueryResult
 {
-    private string $type;
-    private array $data;
-    private int $currentRow;
-    private int $insertId;
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
+     * @var array
+     */
+    private $data;
+
+    /**
+     * @var int
+     */
+    private $currentRow;
+
+    /**
+     * @var int
+     */
+    private $insertId;
 
     public function __construct(string $type, int $insertId = 0)
     {

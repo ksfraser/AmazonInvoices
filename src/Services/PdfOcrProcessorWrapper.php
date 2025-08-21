@@ -19,11 +19,30 @@ use AmazonInvoices\Interfaces\DatabaseRepositoryInterface;
  */
 class PdfOcrProcessorWrapper implements FileSystemInterface, OcrEngineInterface, PdfInvoiceParserInterface, PdfStorageInterface
 {
-    private DatabaseRepositoryInterface $database;
-    private DuplicateDetectionService $duplicateDetector;
-    private PdfOcrProcessor $processor;
-    private string $uploadPath;
-    private string $tempPath;
+    /**
+     * @var DatabaseRepositoryInterface
+     */
+    private $database;
+
+    /**
+     * @var DuplicateDetectionService
+     */
+    private $duplicateDetector;
+
+    /**
+     * @var PdfOcrProcessor
+     */
+    private $processor;
+
+    /**
+     * @var string
+     */
+    private $uploadPath;
+
+    /**
+     * @var string
+     */
+    private $tempPath;
     
     public function __construct(
         DatabaseRepositoryInterface $database,

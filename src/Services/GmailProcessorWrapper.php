@@ -18,9 +18,20 @@ use AmazonInvoices\Interfaces\DatabaseRepositoryInterface;
  */
 class GmailProcessorWrapper implements GmailStorageInterface, OAuthInterface, EmailParserInterface
 {
-    private DatabaseRepositoryInterface $database;
-    private DuplicateDetectionService $duplicateDetector;
-    private GmailInvoiceProcessor $processor;
+    /**
+     * @var DatabaseRepositoryInterface
+     */
+    private $database;
+
+    /**
+     * @var DuplicateDetectionService
+     */
+    private $duplicateDetector;
+
+    /**
+     * @var GmailInvoiceProcessor
+     */
+    private $processor;
     
     public function __construct(
         DatabaseRepositoryInterface $database,
